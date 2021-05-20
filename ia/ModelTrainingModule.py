@@ -1,4 +1,6 @@
 import os
+
+from keras.models import load_model
 from sklearn.model_selection import train_test_split
 import numpy as np
 import cv2
@@ -11,9 +13,6 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Convolution2D, Flatten, Dense
 from tensorflow.keras.optimizers import Adam
 
-data_folder = "training_data"
-path = "C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\" + data_folder
-
 
 def load_data_training(folder, loading_number, origin_path):
     columns_titles = ['Image', 'Steering_Angle', 'Speed']
@@ -22,10 +21,6 @@ def load_data_training(folder, loading_number, origin_path):
     data_frame = data_frame.append(data, True)
     return data_frame
 
-
-data_info = load_data_training(data_folder, 269, path)
-
-print(data_info.head())
 
 
 def show_data_loaded(data_loaded):
@@ -156,14 +151,17 @@ def generation_data_for_training(images_routes_list, steering_angle_list, batch_
             steering_batch_list.append(steering)
         yield np.asarray(image_batch_list), np.asarray(steering_batch_list)
 
+'''
+data_folder = "training_data"
+path = "C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\" + data_folder
 
-# imgRe = preProcess(mpimg.imread('DataCollected/IMG18/Image_1601839810289305.jpg'))
-# # mpimg.imsave('Result.jpg',imgRe)
-# plt.imshow(imgRe)
-# plt.show()
+data_info = load_data_training(data_folder, 415, path)
 
-# show_data_loaded(data_info)
-data_info = remove_highly_repeated(data_info)
+print(data_info.head())
+
+
+show_data_loaded(data_info)
+#data_info = remove_highly_repeated(data_info)
 images_routes, steering_angles = load_images(path, data_info)
 print(images_routes)
 print(steering_angles)
@@ -179,26 +177,10 @@ print("Images Validation", x_val)
 print("Steering Angles Training", y_train)
 print("Steering Angles Validation", y_val)
 
-# cv2.imshow('Test', cv2.imread('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\training_data\\Images269\\Image_1621448443385707.jpg'))
-# cv2.waitKey(0)
-
-# image_test, steering_angle_test = increase_images(
-#    'C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\training_data\\Images269\\Image_1621448443385707.jpg',
-#    0)
-# plt.imshow(image_test)
-# plt.show()
-
-# cv2.imshow('test', pre_training_process(image_test))
-# cv2.waitKey(0)
-
 model = create_model()
 
-trained_model = model.fit(generation_data_for_training(x_train, y_train, 100, 1), steps_per_epoch=100, epochs=1,
+trained_model = model.fit(generation_data_for_training(x_train, y_train, 100, 1), steps_per_epoch=100, epochs=20,
                           validation_data=generation_data_for_training(x_val, y_val, 50, 0), validation_steps=50)
-
-
-model.save("model.h5")
-print("Modelo Guardado")
 
 plt.plot(trained_model.history['loss'])
 plt.plot(trained_model.history['val_loss'])
@@ -206,3 +188,25 @@ plt.legend(['Training', 'Validation'])
 plt.title('Loss')
 plt.xlabel('Epoch')
 plt.show()
+'''
+# cv2.imshow('Test', cv2.imread('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\training_data\\Images269\\Image_1621448443385707.jpg'))
+# cv2.waitKey(0)
+
+#image_test, steering_angle_test = increase_images('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\training_data\\Images269\\Image_1621448443385707.jpg',0)
+# plt.imshow(image_test)
+# plt.show()
+
+# cv2.imshow('test', pre_training_process(image_test))
+# cv2.waitKey(0)
+
+
+#model.save("model.h5")
+#print("Modelo Guardado")
+
+model_trained = load_model('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\model.h5')
+img =  mpimage.imread('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\training_data\\Images415\\Image_1621523407695866.jpg')
+img = np.asarray(img)
+img = pre_training_process(img)
+img = np.array([img])
+steering = float(model_trained.predict(img))
+print(steering)
