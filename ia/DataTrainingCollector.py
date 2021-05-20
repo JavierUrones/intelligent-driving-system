@@ -206,6 +206,7 @@ def start_driving_process_3():
             GPIO.cleanup()
             break
         if getKeyPressed('r'):
+            print('recording')
             recording = True
             init_data_training_collector()
     cv2.waitKey(1)
