@@ -7,35 +7,48 @@ GPIO.setmode(GPIO.BCM)
 class MotorManager():
 
     def __init__(self):
-        self.right_motors = MotorController.RightMotor(4, 3, 2)
-        self.left_motors = MotorController.LeftMotor(21, 20, 16)
+        self.right_motor_front = MotorController.RightMotor(3, 4 ,12)
+        self.right_motor_back = MotorController.RightMotor(20, 21, 13)
+        self.left_motor_front = MotorController.LeftMotor(5, 6, 19)
+        self.left_motor_back = MotorController.RightMotor(14, 15, 18)
+
+
 
 
     def drive(self, steering_angle=0, speed=100, time=1):
         if(steering_angle == 0):
-            self.right_motors.go_ahead(speed)
-            self.left_motors.go_ahead(speed)
+            self.right_motor_front.go_ahead(speed)
+            self.right_motor_back.go_ahead(speed)
+            self.left_motor_front.go_ahead(speed)
+            self.left_motor_back.go_ahead(speed)
 
         elif (steering_angle < 0):
-            l_decreasing_speed = self.calc_speed_increase(speed, steering_angle)
-            r_increasing_speed = self.calc_speed_decrease(speed, steering_angle)
+            l_decreasing_speed = self.calc_speed_decrease(speed, steering_angle)
+            r_increasing_speed = self.calc_speed_increase(speed, steering_angle)
             print(l_decreasing_speed)
             print(r_increasing_speed)
-            self.right_motors.go_ahead(r_increasing_speed)
-            self.left_motors.go_ahead(l_decreasing_speed)
+            self.right_motor_front.go_ahead(r_increasing_speed)
+            self.right_motor_back.go_ahead(r_increasing_speed)
+            self.left_motor_front.go_ahead(l_decreasing_speed)
+            self.left_motor_back.go_ahead(l_decreasing_speed)
 
         elif (steering_angle > 0):
             r_decreasing_speed = self.calc_speed_decrease(speed, steering_angle)
             l_increasing_speed = self.calc_speed_increase(speed, steering_angle)
             print(r_decreasing_speed)
             print(l_increasing_speed)
-            self.right_motors.go_ahead(r_decreasing_speed)
-            self.left_motors.go_ahead(l_increasing_speed)
+            self.right_motor_front.go_ahead(r_decreasing_speed)
+            self.right_motor_back.go_ahead(r_decreasing_speed)
+            self.left_motor_front.go_ahead(l_increasing_speed)
+            self.left_motor_back.go_ahead(l_increasing_speed)
         sleep(time)
+        self.stop()
 
     def stop(self,time=0):
-        self.left_motors.stop()
-        self.right_motors.stop()
+        self.right_motor_front.stop()
+        self.right_motor_back.stop()
+        self.left_motor_front.stop()
+        self.left_motor_back.stop()
         sleep(time)
     
     def calc_speed_decrease(self, speed, steering_angle):

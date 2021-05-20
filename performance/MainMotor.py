@@ -20,23 +20,23 @@ def startDrivingProcess():
             if(recording):
                 img = webcam.getInstantImage()
                 data.save_data(img, 0)
-                motorManager.drive(0, 100)
+                motorManager.drive(0, 90)
             else:
-                motorManager.drive(0, 100)
+                motorManager.drive(0, 90)
         if(readValue == "a"):
             if(recording):
                 img = webcam.getInstantImage()
                 data.save_data(img, -1)
-                motorManager.drive(1, 100)
+                motorManager.drive(1, 90)
             else:
-                motorManager.drive(1, 100)
+                motorManager.drive(1, 90)
         if(readValue == "d"):
             if(recording):
                 img = webcam.getInstantImage()
                 data.save_data(img, 1)
-                motorManager.drive(-1, 100)
+                motorManager.drive(-1, 90)
             else:
-                motorManager.drive(-1, 100)
+                motorManager.drive(-1, 90)
 
         if(readValue == "s"):
             if(recording):
