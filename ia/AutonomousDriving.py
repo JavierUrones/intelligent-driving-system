@@ -7,14 +7,33 @@ sys.path.append('/home/pi/Desktop/TFG/intelligent-driving-system')
 from webcam import WebcamModule
 from performance import MotorModule
 import RPi.GPIO as GPIO
-from keras.models import load_model
+import tflite_runtime.interpreter as tflite
 
 GPIO.setmode(GPIO.BCM)
 
 motor_manager = MotorModule.MotorManager()
 webcam = WebcamModule
 
-model_trained = load_model('/home/pi/Desktop/TFG/intelligent-driving-system/ia/model.h5')
+interpreter = tflite.Interpreter(model_path='/home/pi/Desktop/TFG/intelligent-driving-system/ia/model.tflite')
+
+
+interpreter.allocate_tensors()
+
+input_details = interpreter.get_input_details()
+output_details = interpreter.get_output_details()
+
+height = input_details[0]['shape'][1]
+width = input_details[0]['shape'][2]
+
+
+print("Input details")
+print("shape ", input_details[0]['shape'])
+print("Output details")
+print("shape ", output_details[0]['shape'])
+
+
+
+#model_trained = load_model('/home/pi/Desktop/TFG/intelligent-driving-system/ia/model.h5', compile=False)
 
 
 def process_image_to_predict(img):
@@ -27,11 +46,19 @@ def process_image_to_predict(img):
 
 
 while True:
-    instant_image = webcam.get_img(240, 120)
-    instant_image = np.asarray(instant_image)
-    instant_image = process_image_to_predict(instant_image)
-    steering_predicted = float(model_trained.predict(instant_image))
-    print(steering_predicted)
-    speed = 100
-    motor_manager.drive(steering_predicted, speed)
-    cv2.waitKey(1)
+    try:
+        instant_image = webcam.get_img(240, 120)
+        instant_image = process_image_to_predict(instant_image)
+        instant_image = np.array([instant_image], dtype=np.float32)
+        #steering_predicted = float(model_trained.predict(instant_image))
+        interpreter.set_tensor(input_details[0]['index'], instant_image)
+        interpreter.invoke()
+        output_data = interpreter.get_tensor(output_details[0]['index'])[0]
+        #steering_predicted = float(interpreter.predict(instant_image))
+        print("Steering Predicted", output_data)
+        speed = 100
+        motor_manager.drive(output_data, speed)
+        cv2.waitKey(1)
+    except KeyboardInterrupt:
+        GPIO.cleanup()
+

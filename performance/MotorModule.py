@@ -15,7 +15,7 @@ class MotorManager():
 
 
 
-    def drive(self, steering_angle=0, speed=100, time=1):
+    def drive(self, steering_angle=0, speed=100, time=0.5):
         if(steering_angle == 0):
             self.right_motor_front.go_ahead(speed)
             self.right_motor_back.go_ahead(speed)

@@ -38,14 +38,14 @@ def start_driving_process():
     height, width = 500, 500
     while read_value != 0:
         read_value = input()
-        if read_value == "w":
+        if read_value == "t":
             if recording:
                 image = webcam.get_img(height, width)
                 save_data(image, 0)
                 motorManager.drive(0, 100)
             else:
                 motorManager.drive(0, 100)
-        if read_value == "a":
+        if read_value == "d":
             if recording:
                 image = webcam.get_img(height, width)
                 save_data(image, -1)
@@ -55,8 +55,22 @@ def start_driving_process():
         if read_value == "d":
             if recording:
                 image = webcam.get_img(height, width)
+                save_data(image, -100)
+                motorManager.drive(-100, 100)
+            else:
+                motorManager.drive(-100, 100)
+        if read_value == "f":
+            if recording:
+                image = webcam.get_img(height, width)
                 save_data(image, 1)
                 motorManager.drive(-1, 100)
+            else:
+                motorManager.drive(-1, 100)
+        if read_value == "h":
+            if recording:
+                image = webcam.get_img(height, width)
+                save_data(image, -0.5)
+                motorManager.drive(-0.5, 100)
             else:
                 motorManager.drive(-1, 100)
         if read_value == "s":
@@ -177,28 +191,43 @@ def start_driving_process_3():
     recording = False
     height, width = 500, 500
     while True:
-        if getKeyPressed('w'):
-            print('w was pressed')
+        if getKeyPressed('t'):
+            print('t was pressed')
             if recording:
                 image = webcam.get_img(height, width)
                 save_all_data(image, 0, 100)
                 motorManager.drive(0, 100, 0.5)
             else:
                 motorManager.drive(0, 100, 0.5)
-        if getKeyPressed('a'):
+        if getKeyPressed('d'):
             if recording:
                 image = webcam.get_img(height, width)
                 save_all_data(image, -100, 100)
                 motorManager.drive(-100, 100, 0.5)
             else:
                 motorManager.drive(-100, 100, 0.5)
-        if getKeyPressed('d'):
+        if getKeyPressed('j'):
             if recording:
                 image = webcam.get_img(height, width)
                 save_all_data(image, 100, 100)
                 motorManager.drive(100, 100, 0.5)
             else:
                 motorManager.drive(100, 100, 0.5) 
+        if getKeyPressed("h"):
+            if recording:
+                image = webcam.get_img(height, width)
+                save_all_data(image, 75, 100)
+                motorManager.drive(75, 100)
+            else:
+                motorManager.drive(75, 100)
+        if getKeyPressed("f"):
+            if recording:
+                image = webcam.get_img(height, width)
+                save_all_data(image, -75, 100)
+                motorManager.drive(-75, 100)
+            else:
+                motorManager.drive(-75, 100)
+        
         if getKeyPressed('p'):
             print("finish...")
             recording = False
