@@ -17,7 +17,7 @@ from tensorflow.keras.optimizers import Adam
 def load_data_training(folder, loading_number, origin_path):
     columns_titles = ['Image', 'Steering_Angle', 'Speed']
     data_frame = pd.DataFrame()
-    data = pd.read_csv(origin_path + '\\log_' + str(loading_number) + '.csv', names=columns_titles)
+    data = pd.read_csv(origin_path + '\\log_' + str(loading_number) + '_path_edited.csv', names=columns_titles)
     data_frame = data_frame.append(data, True)
     return data_frame
 
@@ -151,11 +151,14 @@ def generation_data_for_training(images_routes_list, steering_angle_list, batch_
             steering_batch_list.append(steering)
         yield np.asarray(image_batch_list), np.asarray(steering_batch_list)
 
-'''
+
 data_folder = "training_data"
 path = "C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\" + data_folder
 
-data_info = load_data_training(data_folder, 415, path)
+from utils import PathCsvConverter
+
+PathCsvConverter.windows_path_modification(458)
+data_info = load_data_training(data_folder, 458, path)
 
 print(data_info.head())
 
@@ -165,11 +168,9 @@ show_data_loaded(data_info)
 images_routes, steering_angles = load_images(path, data_info)
 print(images_routes)
 print(steering_angles)
-# cv2.imshow('Test', cv2.imread(images_routes[0]))
-# cv2.waitKey(0)
 
 # 20% validation, 80% training
-x_train, x_val, y_train, y_val = train_test_split(images_routes, steering_angles, test_size=0.2, random_state=5)
+x_train, x_val, y_train, y_val = train_test_split(images_routes, steering_angles, test_size=0.3, random_state=5)
 
 print("Images Training", x_train)
 print("Images Validation", x_val)
@@ -189,20 +190,15 @@ plt.title('Loss')
 plt.xlabel('Epoch')
 plt.show()
 
-# cv2.imshow('Test', cv2.imread('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\training_data\\Images269\\Image_1621448443385707.jpg'))
-# cv2.waitKey(0)
-
-#image_test, steering_angle_test = increase_images('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\training_data\\Images269\\Image_1621448443385707.jpg',0)
-# plt.imshow(image_test)
-# plt.show()
-
-# cv2.imshow('test', pre_training_process(image_test))
-# cv2.waitKey(0)
-
-
 model.save("model.h5")
-print("Modelo Guardado")
+print("Model .h5 saved")
 
+# Convert model to a TensorFlow-Lite model to use in Raspberry Pi
+from tensorflow import lite
+converter = lite.TFLiteConverter.from_keras_model(model)
+model_tensorflow_lite = converter.convert()
+open("model.tflite","wb").write(model_tensorflow_lite)
+print("Model .tflite saved")
 '''
 model_trained = load_model('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\model.h5')
 img =  mpimage.imread('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\training_data\\Images415\\Image_1621523407695866.jpg')
@@ -212,8 +208,4 @@ img = np.array([img])
 steering = float(model_trained.predict(img))
 print(steering)
 
-# Convert model to a TensorFlow-Lite model to use in Raspberry Pi
-from tensorflow import lite
-converter = lite.TFLiteConverter.from_keras_model(model_trained)
-tflite_model = converter.convert()
-open("model.tflite","wb").write(tflite_model)
+'''

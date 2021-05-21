@@ -44,6 +44,17 @@ def process_image_to_predict(img):
     img = img / 255
     return img
 
+def evaluate_steering_predicted(steering_predicted_value):
+    if -25 < steering_predicted_value < 25:
+        return 0
+    elif 25<= steering_predicted_value < 65:
+        return 50
+    elif steering_predicted_value >= 65:
+        return 100
+    elif -25 >= steering_predicted_value > -65:
+        return -50
+    elif steering_predicted_value <= -65:
+        return -100
 
 while True:
     try:
@@ -55,10 +66,15 @@ while True:
         interpreter.invoke()
         output_data = interpreter.get_tensor(output_details[0]['index'])[0]
         #steering_predicted = float(interpreter.predict(instant_image))
-        print("Steering Predicted", output_data)
+        print("Steering Predicted"+  output_data)
+
+        print("Steering Predicted After Evaluate" +  evaluate_steering_predicted(output_data))
+
         speed = 100
         motor_manager.drive(output_data, speed)
         cv2.waitKey(1)
     except KeyboardInterrupt:
         GPIO.cleanup()
+
+
 
