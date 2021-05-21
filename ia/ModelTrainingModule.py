@@ -151,7 +151,7 @@ def generation_data_for_training(images_routes_list, steering_angle_list, batch_
             steering_batch_list.append(steering)
         yield np.asarray(image_batch_list), np.asarray(steering_batch_list)
 
-
+'''
 data_folder = "training_data"
 path = "C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\" + data_folder
 
@@ -203,10 +203,17 @@ plt.show()
 model.save("model.h5")
 print("Modelo Guardado")
 
-'''model_trained = load_model('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\model.h5')
+'''
+model_trained = load_model('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\model.h5')
 img =  mpimage.imread('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\training_data\\Images415\\Image_1621523407695866.jpg')
 img = np.asarray(img)
 img = pre_training_process(img)
 img = np.array([img])
 steering = float(model_trained.predict(img))
-print(steering)'''
+print(steering)
+
+# Convert model to a TensorFlow-Lite model to use in Raspberry Pi
+from tensorflow import lite
+converter = lite.TFLiteConverter.from_keras_model(model_trained)
+tflite_model = converter.convert()
+open("model.tflite","wb").write(tflite_model)
