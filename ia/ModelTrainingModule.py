@@ -1,6 +1,6 @@
 import os
 
-from keras.models import load_model
+from tensorflow.keras.models import load_model
 from sklearn.model_selection import train_test_split
 import numpy as np
 import cv2
@@ -151,7 +151,7 @@ def generation_data_for_training(images_routes_list, steering_angle_list, batch_
             steering_batch_list.append(steering)
         yield np.asarray(image_batch_list), np.asarray(steering_batch_list)
 
-'''
+
 data_folder = "training_data"
 path = "C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\" + data_folder
 
@@ -188,7 +188,7 @@ plt.legend(['Training', 'Validation'])
 plt.title('Loss')
 plt.xlabel('Epoch')
 plt.show()
-'''
+
 # cv2.imshow('Test', cv2.imread('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\training_data\\Images269\\Image_1621448443385707.jpg'))
 # cv2.waitKey(0)
 
@@ -200,13 +200,13 @@ plt.show()
 # cv2.waitKey(0)
 
 
-#model.save("model.h5")
-#print("Modelo Guardado")
+model.save("model.h5")
+print("Modelo Guardado")
 
-model_trained = load_model('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\model.h5')
+'''model_trained = load_model('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\model.h5')
 img =  mpimage.imread('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\training_data\\Images415\\Image_1621523407695866.jpg')
 img = np.asarray(img)
 img = pre_training_process(img)
 img = np.array([img])
 steering = float(model_trained.predict(img))
-print(steering)
+print(steering)'''
