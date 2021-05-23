@@ -41,4 +41,4 @@ img = np.array([img])
 steering = float(model_trained.predict(img))
 print("Steering Predicted" , steering)
 print("Steering Predicted after evaluate" , evaluate_steering_predicted(steering))
-   
+
