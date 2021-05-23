@@ -26,7 +26,7 @@ def create_negatives_file(directory):
     negatives_processed_path = os.path.join(directory, "processed_negatives")
     with open(directory + "\\bg.txt", 'w') as f:
         for image in os.listdir(negatives_processed_path):
-            f.write(image+'\n')
+            f.write(negatives_processed_path + "\\" + image+'\n')
 
 
 def create_positive_file(directory, signal):
@@ -34,7 +34,7 @@ def create_positive_file(directory, signal):
     with open(positive_path + '\\info.dat', 'w') as f:
         for image in os.listdir(os.path.join(positive_path, "positives")):
             data = 'positive\\' + image + ' 1 0 0 50 50\n'
-            f.write(data)
+            f.write(positive_path + "\\" + data)
 
 computer_vision_directory = "C:\\Users\\javie\\OneDrive\Escritorio\\TFG\\intelligent-driving-system\\computer-vision"
 #Step 1 - Process negative files.
@@ -44,6 +44,9 @@ computer_vision_directory = "C:\\Users\\javie\\OneDrive\Escritorio\\TFG\\intelli
 #create_negatives_file(computer_vision_directory)
 
 #Step 3 - create positive description file
-#create_positive_file(computer_vision_directory, "stop-signal")
+create_positive_file(computer_vision_directory, "stop-signal")
 
-#Step 4 - Execute 'opencv_createsamples -img signal.jpg -bg bg.txt -info info/info.lst -pngoutput info -maxxangle 0.5 -maxyangle 0.5 -maxzangle 0.5 -num 1950'
+#Step 4 - Execute
+#
+# C:\Users\javie\Downloads\opencv\build\x64\vc14\bin\opencv_createsamples.exe -img stop-signal\positives\stop-signal-image.jpg -bg bg.txt -info stop-signal\info\info.lst -pngoutput stop-signal\info -maxxangle 0.5 -maxyangle -0.5 -maxzangle 0.5 -num 270
+#C:\Users\javie\Downloads\opencv\build\x64\vc14\bin\opencv_createsamples.exe -info stop-signal\info\info.lst -num 270 -w 20 -h 20 -vec stop-signal\positives\positives.vec
