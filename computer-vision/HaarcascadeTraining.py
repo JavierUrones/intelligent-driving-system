@@ -21,12 +21,11 @@ def pre_process_negatives(directory):
             print(str(e))
 
 
-
 def create_negatives_file(directory):
     negatives_processed_path = os.path.join(directory, "processed_negatives")
     with open(directory + "\\bg.txt", 'w') as f:
         for image in os.listdir(negatives_processed_path):
-            f.write(negatives_processed_path + "\\" + image+'\n')
+            f.write(negatives_processed_path + "\\" + image + '\n')
 
 
 def create_positive_file(directory, signal):
@@ -36,16 +35,18 @@ def create_positive_file(directory, signal):
             data = 'positive\\' + image + ' 1 0 0 50 50\n'
             f.write(positive_path + "\\" + data)
 
+
 computer_vision_directory = "C:\\Users\\javie\\OneDrive\Escritorio\\TFG\\intelligent-driving-system\\computer-vision"
-#Step 1 - Process negative files.
-#pre_process_negatives(computer_vision_directory)
+# Step 1 - Process negative files.
+# pre_process_negatives(computer_vision_directory)
 
-#Step 2 - create negative description file
-#create_negatives_file(computer_vision_directory)
+# Step 2 - create negative description file
+# create_negatives_file(computer_vision_directory)
 
-#Step 3 - create positive description file
-#create_positive_file(computer_vision_directory, "stop-signal")
+# Step 3 - create positive description file
+create_positive_file(computer_vision_directory, "green-traffic-light")
 
-#Step 4 - Execute
-#C:\Users\javie\Downloads\opencv\build\x64\vc14\bin\opencv_createsamples.exe -img stop-signal\positives\stop-signal-image.jpg -bg bg.txt -info stop-signal\info\info.lst -pngoutput stop-signal\info -maxxangle 0.5 -maxyangle -0.5 -maxzangle 0.5 -num 270
-#C:\Users\javie\Downloads\opencv\build\x64\vc14\bin\opencv_createsamples.exe -info stop-signal\info\info.lst -num 270 -w 20 -h 20 -vec stop-signal\positives\positives.vec
+# Step 4 - Execute opencv_createsamples and opencv_traincascade
+# C:\Users\javie\Downloads\opencv\build\x64\vc14\bin\opencv_createsamples.exe -img stop-signal\positives\stop-signal-image.jpg -bg bg.txt -info stop-signal\info\info.lst -pngoutput stop-signal\info -maxxangle 0.5 -maxyangle -0.5 -maxzangle 0.5 -num 270
+# C:\Users\javie\Downloads\opencv\build\x64\vc14\bin\opencv_createsamples.exe -info stop-signal\info\info.lst -num 270 -w 20 -h 20 -vec stop-signal\positives\positives.vec
+# C:\Users\javie\Downloads\opencv\build\x64\vc14\bin\opencv_traincascade.exe -data stop-signal\data -vec stop-signal\positives\positives.vec -bg bg.txt -numPos 500 -numNeg 250 -numStages 15 -w 20 -h 20
