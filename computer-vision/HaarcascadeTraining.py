@@ -44,9 +44,8 @@ computer_vision_directory = "C:\\Users\\javie\\OneDrive\Escritorio\\TFG\\intelli
 #create_negatives_file(computer_vision_directory)
 
 #Step 3 - create positive description file
-create_positive_file(computer_vision_directory, "stop-signal")
+#create_positive_file(computer_vision_directory, "stop-signal")
 
 #Step 4 - Execute
-#
-# C:\Users\javie\Downloads\opencv\build\x64\vc14\bin\opencv_createsamples.exe -img stop-signal\positives\stop-signal-image.jpg -bg bg.txt -info stop-signal\info\info.lst -pngoutput stop-signal\info -maxxangle 0.5 -maxyangle -0.5 -maxzangle 0.5 -num 270
+#C:\Users\javie\Downloads\opencv\build\x64\vc14\bin\opencv_createsamples.exe -img stop-signal\positives\stop-signal-image.jpg -bg bg.txt -info stop-signal\info\info.lst -pngoutput stop-signal\info -maxxangle 0.5 -maxyangle -0.5 -maxzangle 0.5 -num 270
 #C:\Users\javie\Downloads\opencv\build\x64\vc14\bin\opencv_createsamples.exe -info stop-signal\info\info.lst -num 270 -w 20 -h 20 -vec stop-signal\positives\positives.vec
