@@ -157,8 +157,8 @@ path = "C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\
 
 from utils import PathCsvConverter
 
-PathCsvConverter.windows_path_modification(458)
-data_info = load_data_training(data_folder, 458, path)
+#PathCsvConverter.windows_path_modification(470)
+data_info = load_data_training(data_folder, 470, path)
 
 print(data_info.head())
 
@@ -169,7 +169,7 @@ images_routes, steering_angles = load_images(path, data_info)
 print(images_routes)
 print(steering_angles)
 
-# 20% validation, 80% training
+# 30% validation, 70% training
 x_train, x_val, y_train, y_val = train_test_split(images_routes, steering_angles, test_size=0.3, random_state=5)
 
 print("Images Training", x_train)
@@ -180,8 +180,8 @@ print("Steering Angles Validation", y_val)
 
 model = create_model()
 
-trained_model = model.fit(generation_data_for_training(x_train, y_train, 100, 1), steps_per_epoch=100, epochs=20,
-                          validation_data=generation_data_for_training(x_val, y_val, 50, 0), validation_steps=50)
+trained_model = model.fit(generation_data_for_training(x_train, y_train, 100, 1), steps_per_epoch=256, epochs=20,
+                          validation_data=generation_data_for_training(x_val, y_val, 50, 0), validation_steps=128)
 
 plt.plot(trained_model.history['loss'])
 plt.plot(trained_model.history['val_loss'])

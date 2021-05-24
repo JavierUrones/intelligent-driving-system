@@ -34,7 +34,7 @@ def evaluate_steering_predicted(steering_predicted_value):
 
 
 model_trained = load_model('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\model.h5')
-img =  mpimage.imread('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\training_data\\Images458\\Image_162161605527838.jpg')
+img =  mpimage.imread('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\training_data\\Images470\\Image_1621875427440988.jpg')
 img = np.asarray(img)
 img = pre_training_process(img)
 img = np.array([img])
