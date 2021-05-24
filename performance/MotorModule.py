@@ -7,7 +7,7 @@ GPIO.setmode(GPIO.BCM)
 class MotorManager():
 
     def __init__(self):
-        self.right_motor_front = MotorController.RightMotor(3, 4 ,12)
+        self.right_motor_front = MotorController.RightMotor(3, 4 , 12)
         self.right_motor_back = MotorController.RightMotor(20, 21, 13)
         self.left_motor_front = MotorController.LeftMotor(5, 6, 19)
         self.left_motor_back = MotorController.RightMotor(14, 15, 18)
