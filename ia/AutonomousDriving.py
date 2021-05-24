@@ -11,7 +11,7 @@ import tflite_runtime.interpreter as tflite
 
 GPIO.setmode(GPIO.BCM)
 
-motor_manager = MotorModule.MotorManager()
+#motor_manager = MotorModule.MotorManager()
 webcam = WebcamModule
 
 interpreter = tflite.Interpreter(model_path='/home/pi/Desktop/TFG/intelligent-driving-system/ia/model.tflite')
@@ -66,12 +66,12 @@ while True:
         interpreter.invoke()
         output_data = interpreter.get_tensor(output_details[0]['index'])[0]
         #steering_predicted = float(interpreter.predict(instant_image))
-        print("Steering Predicted"+  output_data)
+        print("Steering Predicted"+ str(output_data))
 
-        print("Steering Predicted After Evaluate" +  evaluate_steering_predicted(output_data))
+        print("Steering Predicted After Evaluate" +  str(evaluate_steering_predicted(output_data)))
 
         speed = 100
-        motor_manager.drive(output_data, speed)
+        #motor_manager.drive(output_data, speed)
         cv2.waitKey(1)
     except KeyboardInterrupt:
         GPIO.cleanup()

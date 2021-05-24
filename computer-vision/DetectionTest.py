@@ -1,12 +1,15 @@
 import numpy as np
 import cv2
 
-stop_signal_detector = cv2.CascadeClassifier('/home/javier/Escritorio/intelligent-driving-system/computer-vision/stop-signal/data/cascade.xml')
+stop_signal_detector = cv2.CascadeClassifier('/home/pi/Desktop/TFG/intelligent-driving-system/computer-vision/stop-signal/data/stopsign_classifier.xml')
 
+frameWidth = 640
+frameHeight = 480
 cap = cv2.VideoCapture(0)
+cap.set(3, frameWidth)
+cap.set(4, frameHeight)
 
-
-while 1:
+while True:
     ret, img = cap.read()
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)

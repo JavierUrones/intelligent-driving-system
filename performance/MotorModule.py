@@ -23,6 +23,16 @@ class MotorManager():
             self.left_motor_back.go_ahead(speed)
 
         elif (steering_angle < 0):
+            r_decreasing_speed = self.calc_speed_decrease(speed, steering_angle)
+            l_increasing_speed = self.calc_speed_increase(speed, steering_angle)
+            print(r_decreasing_speed)
+            print(l_increasing_speed)
+            self.right_motor_front.go_ahead(r_decreasing_speed)
+            self.right_motor_back.go_ahead(r_decreasing_speed)
+            self.left_motor_front.go_ahead(l_increasing_speed)
+            self.left_motor_back.go_ahead(l_increasing_speed)
+
+        elif (steering_angle > 0):
             l_decreasing_speed = self.calc_speed_decrease(speed, steering_angle)
             r_increasing_speed = self.calc_speed_increase(speed, steering_angle)
             print(l_decreasing_speed)
@@ -32,15 +42,6 @@ class MotorManager():
             self.left_motor_front.go_ahead(l_decreasing_speed)
             self.left_motor_back.go_ahead(l_decreasing_speed)
 
-        elif (steering_angle > 0):
-            r_decreasing_speed = self.calc_speed_decrease(speed, steering_angle)
-            l_increasing_speed = self.calc_speed_increase(speed, steering_angle)
-            print(r_decreasing_speed)
-            print(l_increasing_speed)
-            self.right_motor_front.go_ahead(r_decreasing_speed)
-            self.right_motor_back.go_ahead(r_decreasing_speed)
-            self.left_motor_front.go_ahead(l_increasing_speed)
-            self.left_motor_back.go_ahead(l_increasing_speed)
         sleep(time)
         self.stop()
 
