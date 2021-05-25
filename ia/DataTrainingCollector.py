@@ -190,55 +190,61 @@ def start_driving_process_3():
     speed_value = ""
     recording = False
     height, width = 500, 500
-    while True:
-        if getKeyPressed('t'):
-            print('t was pressed')
-            if recording:
-                image = webcam.get_img(height, width)
-                save_all_data(image, 0, 100)
-                motorManager.drive(0, 100, 0.5)
-            else:
-                motorManager.drive(0, 100, 0.5)
-        if getKeyPressed('d'):
-            if recording:
-                image = webcam.get_img(height, width)
-                save_all_data(image, -100, 100)
-                motorManager.drive(-100, 100, 0.5)
-            else:
-                motorManager.drive(-100, 100, 0.5)
-        if getKeyPressed('j'):
-            if recording:
-                image = webcam.get_img(height, width)
-                save_all_data(image, 100, 100)
-                motorManager.drive(100, 100, 0.5)
-            else:
-                motorManager.drive(100, 100, 0.5) 
-        if getKeyPressed("h"):
-            if recording:
-                image = webcam.get_img(height, width)
-                save_all_data(image, 75, 100)
-                motorManager.drive(75, 100)
-            else:
-                motorManager.drive(75, 100)
-        if getKeyPressed("f"):
-            if recording:
-                image = webcam.get_img(height, width)
-                save_all_data(image, -75, 100)
-                motorManager.drive(-75, 100)
-            else:
-                motorManager.drive(-75, 100)
+    try:
+        while True:
+            if getKeyPressed('t'):
+                print('t was pressed')
+                if recording:
+                    image = webcam.get_img(height, width)
+                    save_all_data(image, 0, 100)
+                    motorManager.drive(0, 100)
+                else:
+                    motorManager.drive(0, 100)
+            if getKeyPressed('d'):
+                if recording:
+                    image = webcam.get_img(height, width)
+                    save_all_data(image, -100, 100)
+                    motorManager.drive(-100, 100)
+                else:
+                    motorManager.drive(-100, 100)
+            if getKeyPressed('j'):
+                if recording:
+                    image = webcam.get_img(height, width)
+                    save_all_data(image, 100, 100)
+                    motorManager.drive(100, 100)
+                else:
+                    motorManager.drive(100, 100) 
+            if getKeyPressed("h"):
+                if recording:
+                    image = webcam.get_img(height, width)
+                    save_all_data(image, 75, 100)
+                    motorManager.drive(75, 100)
+                else:
+                    motorManager.drive(75, 100)
+            if getKeyPressed("f"):
+                if recording:
+                    image = webcam.get_img(height, width)
+                    save_all_data(image, -75, 100)
+                    motorManager.drive(-75, 100)
+                else:
+                    motorManager.drive(-75, 100)
         
-        if getKeyPressed('p'):
-            print("finish...")
-            recording = False
-            save_csv_file()
-            GPIO.cleanup()
-            break
-        if getKeyPressed('r'):
-            print('recording')
-            recording = True
-            init_data_training_collector()
-    cv2.waitKey(1)
+            if getKeyPressed('p'):
+                print("finish...")
+                recording = False
+                save_csv_file()
+                GPIO.cleanup()
+                break
+            if getKeyPressed('r'):
+                print('recording')
+                recording = True
+                init_data_training_collector()
+        cv2.waitKey(1)
+    except:
+        print("finish...")
+        recording = False
+        save_csv_file()
+        GPIO.cleanup()
 
 
 if __name__ == '__main__':
