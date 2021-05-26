@@ -23,7 +23,6 @@ def load_data_training(folder, loading_number, origin_path):
     return data_frame
 
 
-
 def show_data_loaded(data_loaded):
     figure, ax1 = plt.subplots(1, 1)
     ax1.hist(data_loaded['Steering_Angle'], bins=[-100, -50, 0, 50, 100])
@@ -39,7 +38,7 @@ def show_data_loaded(data_loaded):
 
 
 def remove_highly_repeated(data_loaded):
-    margin_repetition_value = 20  # Maximum number of samples with the same steering angle value
+    margin_repetition_value = 125  # Maximum number of samples with the same steering angle value
     steering_angle_values = {}
     index_list = {}
     # Creating a dictionary with the number of repetitions for each Steering Angle value.
@@ -108,7 +107,7 @@ def increase_images(route_img, steering_angle):
 
 
 def pre_training_process(image):
-    image = image[54:120, :, :]
+    image = image[250:500, 0:500]
     image = cv2.cvtColor(image, cv2.COLOR_RGB2YUV)
     image = cv2.GaussianBlur(image, (3, 3), 0)
     image = cv2.resize(image, (200, 66))
@@ -118,13 +117,11 @@ def pre_training_process(image):
 
 def create_model():
     model = Sequential()
-
     model.add(Convolution2D(24, (5, 5), (2, 2), input_shape=(66, 200, 3), activation='elu'))
     model.add(Convolution2D(36, (5, 5), (2, 2), activation='elu'))
     model.add(Convolution2D(48, (5, 5), (2, 2), activation='elu'))
     model.add(Convolution2D(64, (3, 3), activation='elu'))
     model.add(Convolution2D(64, (3, 3), activation='elu'))
-
     model.add(Flatten())
     model.add(Dense(100, activation='elu'))
     model.add(Dense(50, activation='elu'))
@@ -152,25 +149,26 @@ def generation_data_for_training(images_routes_list, steering_angle_list, batch_
             steering_batch_list.append(steering)
         yield np.asarray(image_batch_list), np.asarray(steering_batch_list)
 
+
 data_folder = "training_data"
 path = "C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\" + data_folder
 
-
-#PathCsvConverter.windows_path_modification(470, True)
-data_info = load_data_training(data_folder, 470, path)
+#PathCsvConverter.windows_path_modification(1, True)
+data_info = load_data_training(data_folder, 1, path)
 
 print(data_info.head())
 
-
 show_data_loaded(data_info)
 
-#data_info = remove_highly_repeated(data_info)
+data_info = remove_highly_repeated(data_info)
+show_data_loaded(data_info)
+
 images_routes, steering_angles = load_images(path, data_info)
 print(images_routes)
 print(steering_angles)
 
-# 30% validation, 70% training
-x_train, x_val, y_train, y_val = train_test_split(images_routes, steering_angles, test_size=0.3, random_state=5)
+# 20% validation, 80% training
+x_train, x_val, y_train, y_val = train_test_split(images_routes, steering_angles, test_size=0.2, random_state=5)
 
 print("Images Training", x_train)
 print("Images Validation", x_val)
@@ -180,8 +178,8 @@ print("Steering Angles Validation", y_val)
 
 model = create_model()
 
-trained_model = model.fit(generation_data_for_training(x_train, y_train, 128, 1), steps_per_epoch=256, epochs=40,
-                          validation_data=generation_data_for_training(x_val, y_val, 64, 0), validation_steps=128)
+trained_model = model.fit(generation_data_for_training(x_train, y_train, 128, 1), steps_per_epoch=128, epochs=15,
+                          validation_data=generation_data_for_training(x_val, y_val, 64, 0), validation_steps=64)
 
 plt.plot(trained_model.history['loss'])
 plt.plot(trained_model.history['val_loss'])
@@ -195,10 +193,12 @@ print("Model .h5 saved")
 
 # Convert model to a TensorFlow-Lite model to use in Raspberry Pi
 from tensorflow import lite
+
 converter = lite.TFLiteConverter.from_keras_model(model)
 model_tensorflow_lite = converter.convert()
-open("model.tflite","wb").write(model_tensorflow_lite)
+open("model.tflite", "wb").write(model_tensorflow_lite)
 print("Model .tflite saved")
+
 '''
 model_trained = load_model('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\model.h5')
 img =  mpimage.imread('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\training_data\\Images415\\Image_1621523407695866.jpg')
@@ -206,5 +206,5 @@ img = np.asarray(img)
 img = pre_training_process(img)
 img = np.array([img])
 steering = float(model_trained.predict(img))
-print(steering)'''
-
+print(steering)
+'''

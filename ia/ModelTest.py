@@ -13,7 +13,7 @@ from tensorflow.keras.optimizers import Adam
 
 
 def pre_training_process(image):
-    image = image[54:120, :, :]
+    image = image[250:500, 0:500]
     image = cv2.cvtColor(image, cv2.COLOR_RGB2YUV)
     image = cv2.GaussianBlur(image, (3, 3), 0)
     image = cv2.resize(image, (200, 66))
@@ -34,7 +34,7 @@ def evaluate_steering_predicted(steering_predicted_value):
 
 
 model_trained = load_model('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\model.h5')
-img =  mpimage.imread('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\training_data\\Images470\\Image_1621875427440988.jpg')
+img =  mpimage.imread('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\training_data\\Images703\\Image_1621967875966062.jpg')
 img = np.asarray(img)
 img = pre_training_process(img)
 img = np.array([img])
