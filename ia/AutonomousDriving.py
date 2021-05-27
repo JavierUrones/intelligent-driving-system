@@ -36,14 +36,14 @@ print("shape ", output_details[0]['shape'])
 #model_trained = load_model('/home/pi/Desktop/TFG/intelligent-driving-system/ia/model.h5', compile=False)
 
 
-def process_image_to_predict(img):
-    img = img[54:120, :, :]
-    img = cv2.cvtColor(img, cv2.COLOR_RGB2YUV)
-    img = cv2.GaussianBlur(img, (3, 3), 0)
-    img = cv2.resize(img, (200, 66))
-    img = img / 255
-    return img
-
+def process_image_to_predict(image):
+    image = image[300:500, 0:500]
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2YUV)
+    kernel_size = 5
+    image = cv2.GaussianBlur(image, (kernel_size, kernel_size), 0)
+    image = cv2.resize(image, (64, 64))
+    image = image / 255
+    return image
 def evaluate_steering_predicted(steering_predicted_value):
     if -25 < steering_predicted_value < 25:
         return 0

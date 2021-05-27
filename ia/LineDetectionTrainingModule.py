@@ -1,6 +1,8 @@
 import os
 
 from tensorflow.keras.models import load_model
+
+from tensorflow.keras.layers import BatchNormalization
 from sklearn.model_selection import train_test_split
 import numpy as np
 import cv2
@@ -10,8 +12,10 @@ from sklearn.utils import shuffle
 from imgaug import augmenters as img_augmenters
 import matplotlib.image as mpimage
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Convolution2D, Flatten, Dense
+from tensorflow.keras.layers import Convolution2D, Flatten, Dense, MaxPool2D, Dropout
 from tensorflow.keras.optimizers import Adam
+from tensorflow.python.keras.layers import UpSampling2D, Lambda
+
 from utils import PathCsvConverter
 
 
@@ -106,7 +110,7 @@ def increase_images(route_img, steering_angle):
     return image_to_transform, steering_angle
 
 
-def pre_training_process(image):
+def pre_training_process_1(image):
     image = image[250:500, 0:500]
     image = cv2.cvtColor(image, cv2.COLOR_RGB2YUV)
     image = cv2.GaussianBlur(image, (3, 3), 0)
@@ -114,21 +118,29 @@ def pre_training_process(image):
     image = image / 255
     return image
 
+def pre_training_process_2(image):
+    image = image[300:500, 0:500]
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2YUV)
+    kernel_size = 5
+    image = cv2.GaussianBlur(image, (kernel_size, kernel_size), 0)
+    image = cv2.resize(image, (64, 64))
+    image = image / 255
+    return image
+
 
 def create_model():
     model = Sequential()
-    model.add(Convolution2D(24, (5, 5), (2, 2), input_shape=(66, 200, 3), activation='elu'))
+    model.add(Convolution2D(24, (5, 5), (2, 2), input_shape=(64, 64, 3), activation='elu'))
     model.add(Convolution2D(36, (5, 5), (2, 2), activation='elu'))
     model.add(Convolution2D(48, (5, 5), (2, 2), activation='elu'))
     model.add(Convolution2D(64, (3, 3), activation='elu'))
     model.add(Convolution2D(64, (3, 3), activation='elu'))
     model.add(Flatten())
-    model.add(Dense(100, activation='elu'))
-    model.add(Dense(50, activation='elu'))
-    model.add(Dense(10, activation='elu'))
+    model.add(Dense(100, activation='relu'))
+    model.add(Dense(50, activation='relu'))
+    model.add(Dense(10, activation='relu'))
     model.add(Dense(1))
-
-    model.compile(Adam(lr=0.0001), loss='mse')
+    model.compile(Adam(lr=0.0001), loss='mse', metrics=["accuracy"])
     return model
 
 
@@ -144,7 +156,7 @@ def generation_data_for_training(images_routes_list, steering_angle_list, batch_
             else:
                 image = mpimage.imread(images_routes_list[index])
                 steering = steering_angle_list[index]
-            image = pre_training_process(image)
+            image = pre_training_process_2(image)
             image_batch_list.append(image)
             steering_batch_list.append(steering)
         yield np.asarray(image_batch_list), np.asarray(steering_batch_list)
@@ -169,17 +181,15 @@ print(steering_angles)
 
 # 20% validation, 80% training
 x_train, x_val, y_train, y_val = train_test_split(images_routes, steering_angles, test_size=0.2, random_state=5)
+x_train, y_train = shuffle(x_train, y_train)
+print("Images Training", len(x_train))
+print("Images Validation", len(x_val))
 
-print("Images Training", x_train)
-print("Images Validation", x_val)
-
-print("Steering Angles Training", y_train)
-print("Steering Angles Validation", y_val)
 
 model = create_model()
 
-trained_model = model.fit(generation_data_for_training(x_train, y_train, 128, 1), steps_per_epoch=128, epochs=15,
-                          validation_data=generation_data_for_training(x_val, y_val, 64, 0), validation_steps=64)
+trained_model = model.fit(generation_data_for_training(x_train, y_train, 50, 1), steps_per_epoch=100, epochs=100,
+                          validation_data=generation_data_for_training(x_val, y_val, 25, 0), validation_steps=25)
 
 plt.plot(trained_model.history['loss'])
 plt.plot(trained_model.history['val_loss'])
@@ -187,7 +197,11 @@ plt.legend(['Training', 'Validation'])
 plt.title('Loss')
 plt.xlabel('Epoch')
 plt.show()
-
+plt.plot(trained_model.history['accuracy'], label='accuracy')
+plt.plot(trained_model.history['val_accuracy'], label = 'val_accuracy')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy')
+plt.show()
 model.save("model.h5")
 print("Model .h5 saved")
 
@@ -203,8 +217,10 @@ print("Model .tflite saved")
 model_trained = load_model('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\model.h5')
 img =  mpimage.imread('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\training_data\\Images415\\Image_1621523407695866.jpg')
 img = np.asarray(img)
-img = pre_training_process(img)
+img = pre_training_process_2(img)
 img = np.array([img])
 steering = float(model_trained.predict(img))
 print(steering)
+
+image = pre_training_process_2('C:\\Users\\javie\\OneDrive\\Escritorio\\TFG\\intelligent-driving-system\\ia\\training_data\\Images703\\Image_1621967882492679.jpg')
 '''
