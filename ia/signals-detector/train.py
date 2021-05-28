@@ -39,6 +39,7 @@ def load_split(basePath, csvPath):
         		# resize the image to be 32x32 pixels, ignoring aspect ratio,
 		# and then perform Contrast Limited Adaptive Histogram
 		# Equalization (CLAHE)
+
 		image = transform.resize(image, (32, 32))
 		image = exposure.equalize_adapthist(image, clip_limit=0.1)
 		# update the list of data and labels, respectively
@@ -76,6 +77,10 @@ testPath = os.path.sep.join([args["dataset"], "Test.csv"])
 print("[INFO] loading training and testing data...")
 (trainX, trainY) = load_split(args["dataset"], trainPath)
 (testX, testY) = load_split(args["dataset"], testPath)
+
+print("TRAIN X", trainX)
+print("TRAIN Y", trainY)
+
 # scale data to the range of [0, 1]
 trainX = trainX.astype("float32") / 255.0
 testX = testX.astype("float32") / 255.0
@@ -138,3 +143,4 @@ plt.xlabel("Epoch #")
 plt.ylabel("Loss/Accuracy")
 plt.legend(loc="lower left")
 plt.savefig(args["plot"])
+'''
