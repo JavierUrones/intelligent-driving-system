@@ -19,7 +19,6 @@ import os
 
 class RemoteControl:
     def __init__(self):
-        GPIO.setmode(GPIO.BCM)
         pygame.init()
         window = pygame.display.set_mode((100, 100))
         self.motor_core = RobotManager.RobotManager()
@@ -138,6 +137,9 @@ class RemoteControl:
             GPIO.cleanup()
 
 if __name__ == '__main__':
+    GPIO.setmode(GPIO.BCM)
+
+
     rc = RemoteControl()
 
     rc.start_driving_process()

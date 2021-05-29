@@ -1,4 +1,8 @@
-from src import LeftMotor, RightMotor
+import sys
+
+sys.path.append('/home/pi/Desktop/TFG/intelligent-driving-system')
+
+from src.robot.MotorController import LeftMotor, RightMotor
 import RPi.GPIO as GPIO
 from time import sleep
 

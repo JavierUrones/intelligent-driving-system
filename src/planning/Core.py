@@ -13,3 +13,11 @@ class Core:
         #Si no interpretar imagen y predecir con modelo inteligente.
         #Actuar conforme a lo que prediga el modelo inteligente.
         print("empty")
+        while True:
+            self.lane_following()
+
+    def lane_following(self):
+        instant_image = self.vision.get_image()
+        steering_angle = self.vision.lane_detection_frame(instant_image)
+        self.robot.drive(steering_angle, 25)
+        

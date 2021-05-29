@@ -1,5 +1,9 @@
-import MotorCore as mc
-import Sensor as s
+import sys
+
+sys.path.append('/home/pi/Desktop/TFG/intelligent-driving-system')
+
+import src.robot.MotorCore as mc
+import src.robot.Sensor as s
 
 
 class RobotManager:
