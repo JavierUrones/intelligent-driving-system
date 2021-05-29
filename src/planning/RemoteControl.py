@@ -2,7 +2,7 @@ import sys
 
 sys.path.append('/home/pi/Desktop/TFG/intelligent-driving-system')
 
-from src.robot import MotorCore
+from src.robot import RobotManager
 from src.cvision.Webcam import Webcam
 
 from modulefinder import Module
@@ -22,7 +22,7 @@ class RemoteControl:
         GPIO.setmode(GPIO.BCM)
         pygame.init()
         window = pygame.display.set_mode((100, 100))
-        self.motor_core = MotorCore.MotorCore()
+        self.motor_core = RobotManager.RobotManager()
         self.webcam = Webcam()
         self.total_count = 0
         self.list_images = []
@@ -139,4 +139,5 @@ class RemoteControl:
 
 if __name__ == '__main__':
     rc = RemoteControl()
+
     rc.start_driving_process()
