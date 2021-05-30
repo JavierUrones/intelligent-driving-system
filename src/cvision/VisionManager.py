@@ -17,17 +17,20 @@ class VisionManager:
         return self.webcam.get_image()
     def show_image(self, title, img):
         cv2.imshow(title, img)
-        cv2.waitKey()
-        cv2.destroyAllWindows()
+        #cv2.waitKey()
+        #cv2.destroyAllWindows()
 
     def lane_detection_frame(self, img):
-        image = cv2.resize(img, (self.height, self.width))
+        #image = cv2.resize(img, (self.height, self.width))
+        image = img
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        '''lower_black = np.array([0, 0, 0])
+        '''
+        lower_black = np.array([0, 0, 0])
         upper_black = np.array([50, 50, 100])
-        mask_black = cv2.inRange(gray_image, lower_black, upper_black)'''
-        edges_image = cv2.Canny(gray_image, 200, 400)
-        self.show_image('a',edges_image)
+        mask_black = cv2.inRange(gray_image, lower_black, upper_black)
+        '''
+        edges_image = cv2.Canny(gray_image, 100, 600)
+        #self.show_image('a',edges_image)
         roi = self.select_ROI(edges_image)
         self.show_image('roi', roi)
         lines_detected = self.isolate_lines(roi)
@@ -46,10 +49,13 @@ class VisionManager:
         #cv2.imshow('l_img', l_img)
         #cv2.waitKey(0)
         steer = self.calculate_steering_angle(image, lanes)
+        if steer == None:
+            steer = 0
         print(steer)
         medium = self.show_medium_line(image, steer)
         cv2.imshow('med', medium)
-        cv2.waitKey(0)
+        #cv2.waitKey(0)'''
+        return steer
 
     def select_ROI(self, image):
         roi = image[int(image.shape[0]/2):image.shape[0], 0:image.shape[1]]
@@ -101,11 +107,14 @@ class VisionManager:
     def calculate_steering_angle(self, image, lanes):
         if len(lanes) == 0:
             print("No lanes detected")
-        if(len(lanes)) == 1:
+            return None
+
+        elif(len(lanes)) == 1:
             print("aqui")
             x_1_initial, _, x_2_final, _ = lanes[0][0]
             x_med = x_2_final - x_1_initial
         else:
+            print("LANES: ", lanes)
             _, _, x_2_left, _ = lanes[0][0]
             _, _, x_2_right, _ = lanes[1][0]
             camera_calibration_percent = 0.0
@@ -124,7 +133,9 @@ class VisionManager:
             steering_angle = steering_angle + 90
         elif steering_angle > 0:
             steering_angle = steering_angle - 90
-
+        sum_factor = 0.1
+        if steering_angle == 0:
+            steering_angle += sum_factor
         x1 = int(image.shape[1]/2)
         y1 = image.shape[0]
         x2 = int(x1-image.shape[0]/2 / math.tan(steering_angle))
