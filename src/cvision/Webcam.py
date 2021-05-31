@@ -3,8 +3,8 @@ import cv2
 
 class Webcam:
     def __init__(self):
-        self.height = 340
-        self.width = 220
+        self.height = 480
+        self.width = 240
         self.source = cv2.VideoCapture(0)
 
     def get_image(self):

@@ -9,8 +9,8 @@ import os
 class VisionManager:
     def __init__(self):
         self.webcam = wb.Webcam()
-        self.height = 340
-        self.width = 220
+        self.height = 480
+        self.width = 240
 
 
     def get_image(self):
@@ -91,13 +91,14 @@ class VisionManager:
             right_points_avg = np.average(right_points, axis=0)
             if len(right_points) > 0:
                 lanes.append(self.calculate_points(image, right_points_avg))
+            else:
+                print("No lines detected")
+                return []
             return lanes
 
-        else:
-            print("No lines detected")
-            return []
 
     def calculate_points(self, image, points_avg):
+        print("POINTS", points_avg)
         y_1 = image.shape[0]
         y_2 = int(y_1*1/2)
         x_1 = max(-image.shape[1], min(2*image.shape[1], int((y_1 - points_avg[1])/points_avg[0])))
